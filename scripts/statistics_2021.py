@@ -53,7 +53,6 @@ def process(input_file_path):
             for (key, value) in row.items():  # go over each column name and value
                 columns[key].append(value)
     zip_list = list(columns)
-    print(zip_list)
     month = zip_list[0].rsplit(' ', 1)
     if month[0] in month_list:
         month_digit = month_list.index(month[0]) + 1
@@ -62,8 +61,10 @@ def process(input_file_path):
     for enum, ship_name in enumerate(columns[zip_list[0]]):
         if ship_name == 'Название судна':
             for column in zip_list:
-                list_index = [i + 5 for i, item in enumerate(columns[column][enum + 5:enum + 19]) if re.search('\d',
-                                                                                                               item)]
+                start = columns[zip_list[0]].index("Линия/Агент")
+                end = columns[zip_list[0]].index(" Итого шт.")
+                list_index = [i + 5 for i, item in enumerate(columns[column][enum + start:enum + end - 1]) if re.search(
+                    '\d', item)]
                 for enum_for_value in list_index:
                     parse_column(parsed_data, enum, zip_list[0], column, enum_for_value)
 
@@ -77,6 +78,5 @@ output_file_path = os.path.join(output_folder, basename + '.json')
 print("output_file_path is {}".format(output_file_path))
 
 parsed_data = process(input_file_path)
-print(parsed_data)
 with open(output_file_path, 'w', encoding='utf-8') as file:
     json.dump(parsed_data, file, ensure_ascii=False, indent=4)
