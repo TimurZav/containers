@@ -34,10 +34,7 @@ def parse_column(parsed_data, enum, column0, column1, enum_for_value):
         else columns[column1][enum + 2] != 'груженые'
     )
 
-    type = {
-        'container_size': int("".join(re.findall("\d", columns[column1][enum + 3]))[:2])
-    }
-
+    type = {'container_size': int("".join(re.findall("\d", columns[column1][enum + 3]))[:2])}
     count = {'count': int(float(columns[column1][enum + enum_for_value]))}
     line = {'line': columns[column0][enum + enum_for_value].rsplit('/', 1)[0]}
     x = {**line, **type, **count}
