@@ -24,18 +24,22 @@ def merge_two_dicts(x, y):
 
 
 def parse_column(parsed_data, enum, column0, column1, enum_for_value):
-    type = dict()
-    count = dict()
-    line = dict()
     context['ship_name'] = context['ship_name'] if not columns[column1][enum] else \
         re.findall(r'\b\S+\b', columns[column1][enum])[1]
     context['direction'] = context['direction'] if not columns[column1][enum + 1] else \
         "import" if columns[column1][enum + 1] == 'выгрузка' else "export"
-    context['is_empty'] = context['is_empty'] if not columns[column1][enum + 2] else \
-        False if columns[column1][enum + 2] == 'груженые' else True
-    type['container_size'] = int("".join(re.findall("\d", columns[column1][enum + 3]))[:2])
-    count['count'] = int(float(columns[column1][enum + enum_for_value]))
-    line['line'] = columns[column0][enum + enum_for_value].rsplit('/', 1)[0]
+    context['is_empty'] = (
+        context['is_empty']
+        if not columns[column1][enum + 2]
+        else columns[column1][enum + 2] != 'груженые'
+    )
+
+    type = {
+        'container_size': int("".join(re.findall("\d", columns[column1][enum + 3]))[:2])
+    }
+
+    count = {'count': int(float(columns[column1][enum + enum_for_value]))}
+    line = {'line': columns[column0][enum + enum_for_value].rsplit('/', 1)[0]}
     x = {**line, **type, **count}
     record = merge_two_dicts(context, x)
     parsed_data.append(record)
