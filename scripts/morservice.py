@@ -61,8 +61,8 @@ def process(input_file_path):
                 parsed_record["direction"] = 'import'
                 parsed_record["is_empty"] = True if value[1] == 'порожние' else False
                 parsed_record["container_type"] = 'REF' if value[1] == 'из них реф.' else None
-                parsed_record["teu"] = float(value[9]) - float(next_value[9]) if value[1] == 'груженые' else \
-                    float(value[9])
+                parsed_record["teu"] = int(float(value[9])) - int(float(next_value[9])) if value[1] == 'груженые' else \
+                    int(float(value[9]))
                 record = merge_two_dicts(context, parsed_record)
                 logging.info(u"record is {}".format(record))
                 parsed_data.append(record)

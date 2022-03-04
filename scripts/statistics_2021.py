@@ -59,15 +59,19 @@ def process(input_file_path):
         month_digit = month_list.index(month[0]) + 1
     context['month'] = month_digit
     context['year'] = int(month[1])
-    for enum, ship_name in enumerate(columns[zip_list[0]]):
-        if ship_name == 'Название судна':
-            for column in zip_list:
-                start = columns[zip_list[0]].index("Линия/Агент")
-                end = columns[zip_list[0]].index(" Итого шт.")
-                list_index = [i + 5 for i, item in enumerate(columns[column][enum + start:enum + end - 1]) if re.search(
-                    '\d', item)]
-                for enum_for_value in list_index:
-                    parse_column(parsed_data, enum, zip_list[0], column, enum_for_value)
+    for (enum, ship_name), ship_name_number in zip(enumerate(columns[zip_list[0]]), columns[zip_list[1]]):
+        number_ship = re.findall("\d{1,2}[.]", ship_name_number)
+        try:
+            if ship_name == 'Название судна' or "".join(re.findall("\d", number_ship[0])[:]).isdigit():
+                for column in zip_list:
+                    start = columns[zip_list[0]].index("Линия/Агент")
+                    end = columns[zip_list[0]].index(" Итого шт.")
+                    list_index = [i + 5 for i, item in enumerate(columns[column][enum + start:enum + end - 1]) if re.search(
+                        '\d', item)]
+                    for enum_for_value in list_index:
+                        parse_column(parsed_data, enum, zip_list[0], column, enum_for_value)
+        except IndexError:
+            continue
 
     return parsed_data
 
