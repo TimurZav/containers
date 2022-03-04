@@ -24,8 +24,9 @@ def merge_two_dicts(x, y):
 
 
 def parse_column(parsed_data, enum, column0, column1, enum_for_value):
+    ship_name = [word for word in re.findall(r'\b\S+\b', columns[column1][enum]) if word.isalpha()]
     context['ship_name'] = context['ship_name'] if not columns[column1][enum] else \
-        re.findall(r'\b\S+\b', columns[column1][enum])[1]
+        " ".join(ship_name)
     context['direction'] = context['direction'] if not columns[column1][enum + 1] else \
         "import" if columns[column1][enum + 1] == 'выгрузка' else "export"
     context['is_empty'] = (
