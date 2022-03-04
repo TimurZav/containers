@@ -24,7 +24,10 @@ def merge_two_dicts(x, y):
 
 
 def parse_column(parsed_data, enum, column0, column1, enum_for_value):
-    ship_name = [word for word in re.findall(r'\b\S+\b', columns[column1][enum]) if word.isalpha()]
+    parsed_ship_name_and_date = re.findall(r'\b\S+\b', columns[column1][enum])
+    ship_name = [word for word in parsed_ship_name_and_date if word.isalpha()]
+    date_full_arrive_and_leave = parsed_ship_name_and_date[-1]
+    context['date_arrive_and_leave'] = date_full_arrive_and_leave
     context['ship_name'] = context['ship_name'] if not columns[column1][enum] else \
         " ".join(ship_name)
     context['direction'] = context['direction'] if not columns[column1][enum + 1] else \
